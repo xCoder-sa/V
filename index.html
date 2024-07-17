@@ -9,7 +9,11 @@
             font-family: Arial, sans-serif;
             direction: rtl;
             text-align: center;
-            margin-top: 100px; /* إضافة مسافة أعلى الصفحة */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
         .container {
             max-width: 300px;
@@ -30,9 +34,10 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             text-align: center;
+            font-size: 14px; /* تقليل حجم الخط */
         }
         button {
-            width: 80%; /* تقليل عرض الزر */
+            width: 60%; /* تقليل عرض الزر */
             padding: 8px; /* تقليل حجم البادينغ */
             background-color: #4CAF50;
             color: white;
