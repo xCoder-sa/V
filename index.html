@@ -61,10 +61,10 @@
     <label for="days">عدد أيام الإجازة:</label>
     <input type="number" id="days" min="0" placeholder="أدخل عدد أيام الإجازة">
 
-    <label for="option">اختر رقم:</label>
-    <select id="option">
-        <option value="208">208</option>
-        <option value="196">196</option>
+    <label for="hours">عدد الساعات:</label>
+    <select id="hours">
+        <option value="208">عدد ساعات الخدمة المدنية 208</option>
+        <option value="196">عدد ساعات التشغيل الذاتي 196</option>
     </select>
 
     <button onclick="calculate()">حساب</button>
@@ -73,13 +73,13 @@
 </div>
 
 <div class="footer">
-    &copy; 2024 Ali
+    Ali
 </div>
 
 <script>
     function calculate() {
         const days = document.getElementById('days').value;
-        const option = document.getElementById('option').value;
+        const hours = document.getElementById('hours').value;
 
         if (days === "") {
             alert("يرجى إدخال عدد أيام الإجازة");
@@ -87,7 +87,7 @@
         }
 
         const ar12 = parseFloat(days);
-        const av12 = parseFloat(option);
+        const av12 = parseFloat(hours);
         const result = Math.abs((8 * ar12) - av12) / 13;
 
         document.getElementById('result').innerText = `النتيجة: ${result.toFixed(2)}`;
