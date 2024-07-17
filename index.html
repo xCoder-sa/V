@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حساب الدالة</title>
+    <title>حساب الأيام الاعتيادية المطلوبة</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
         }
         .container {
             max-width: 300px;
@@ -44,12 +46,18 @@
             font-size: 1.2em;
             color: #333;
         }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>حساب الدالة</h2>
+    <h2>حساب الأيام الاعتيادية المطلوبة</h2>
     <label for="days">عدد أيام الإجازة:</label>
     <input type="number" id="days" min="0" placeholder="أدخل عدد أيام الإجازة">
 
@@ -62,6 +70,10 @@
     <button onclick="calculate()">حساب</button>
 
     <div class="result" id="result"></div>
+</div>
+
+<div class="footer">
+    &copy; 2024 Ali
 </div>
 
 <script>
