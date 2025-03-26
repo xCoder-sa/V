@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة الأيام المطلوبة</title>
+    <title>حاسبة المناوبات المطلوبة</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,10 +15,11 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden; /* لمنع التمرير */
+            overflow: hidden;
         }
-        .container {
-            max-width: 300px;
+        /* استبدلنا .container بـ .Ali.Alshahrani */
+        .Ali.Alshahrani {
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             border: 1px solid #ccc;
@@ -30,18 +31,18 @@
             display: block;
             margin-bottom: 10px;
         }
-        input[type="number"], select {
+        input[type="number"], input[type="text"] {
             width: 100%;
-            padding: 6px; /* تقليل حجم البادينغ */
+            padding: 6px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
             text-align: center;
-            font-size: 14px; /* تقليل حجم الخط */
+            font-size: 14px;
         }
         button {
-            width: 60%; /* تقليل عرض الزر */
-            padding: 8px; /* تقليل حجم البادينغ */
+            width: 60%;
+            padding: 8px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -51,57 +52,187 @@
         button:hover {
             background-color: #45a049;
         }
-        .result {
+
+        /* استبدلنا .table-container بـ .AliAlshahrani-tableContainer */
+        .AliAlshahrani-tableContainer {
             margin-top: 20px;
-            font-size: 1.2em;
-            color: #333;
+            overflow-x: auto;
         }
-        .footer {
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            min-width: 700px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .highlight {
+            background-color: #e6ffe6;
+        }
+
+        /* استبدلنا .footer بـ .AliFooter */
+        .AliFooter {
             margin-top: 20px;
             text-align: center;
             font-size: 0.9em;
-            color: rgba(119, 119, 119, 0.6); /* لون شفاف قليلاً */
+            color: rgba(119, 119, 119, 0.6);
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>حاسبة الأيام المطلوبة</h2>
+<!-- غيّرنا class="container" إلى class="Ali Alshahrani" -->
+<div class="Ali Alshahrani">
+    <h2>حاسبة المناوبات المطلوبة</h2>
     <label for="days">عدد أيام الإجازة:</label>
     <input type="number" id="days" min="0" placeholder="أدخل عدد أيام الإجازة">
-
-    <label for="hours">عدد الساعات:</label>
-    <select id="hours">
-        <option value="192">192</option>
-    </select>
+    
+    <label for="hours">الساعات النظامية:</label>
+    <input type="text" id="hours" value="192" readonly>
 
     <button onclick="calculate()">حساب</button>
 
-    <div class="result" id="result"></div>
+    <!-- غيّرنا class="table-container" إلى class="AliAlshahrani-tableContainer" -->
+    <div class="AliAlshahrani-tableContainer" id="resultTable" style="display:none;"></div>
 </div>
 
-<div class="footer">
+<!-- غيّرنا class="footer" إلى class="AliFooter" -->
+<div class="AliFooter">
     Coded & Developed: Ali Alshahrani
 </div>
 
 <script>
     function calculate() {
-        const days = document.getElementById('days').value;
-        const hours = document.getElementById('hours').value;
-
-        if (days === "") {
+        const daysInput = document.getElementById('days').value;
+        const hoursInput = document.getElementById('hours').value;
+        
+        if (daysInput === "") {
             alert("يرجى إدخال عدد أيام الإجازة");
             return;
         }
+        
+        const days = parseFloat(daysInput);
+        const systemHours = parseFloat(hoursInput);
 
-        const ar12 = parseFloat(days);
-        const av12 = parseFloat(hours);
-        const result = Math.abs((8 * ar12) - av12) / 12;
+        // نفس المعادلة السابقة دون تغيير
+        const totalHours = Math.abs((8 * days) - systemHours);
 
-        document.getElementById('result').innerText = ` الايام الاعتيادية المطلوبة : ${result.toFixed(2)}`;
+        let shift12 = 0;
+        let shift11 = 0;
+        let shift10 = 0;
+        let shift8 = 0;
+        let shift6 = 0;
+        let remainderOut = 0;
+        let notes = "";
+
+        // تحديد عدد المناوبات 12 ساعة
+        shift12 = Math.floor(totalHours / 12);
+        let leftover = totalHours - (shift12 * 12);
+
+        if (leftover === 0) {
+            // لا يوجد بواقي ساعات
+        } else if (leftover < 6) {
+            remainderOut = leftover;
+            notes = "لا توجد مناوبة بالنظام أقل من 6 ساعات";
+        } else {
+            const availableShifts = [11, 10, 8, 6];
+            let chosen = availableShifts[0];
+            let minDiff = Math.abs(availableShifts[0] - leftover);
+            for (let i = 1; i < availableShifts.length; i++) {
+                const diff = Math.abs(availableShifts[i] - leftover);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    chosen = availableShifts[i];
+                }
+            }
+            if (chosen === 11) {
+                shift11 = 1;
+            } else if (chosen === 10) {
+                shift10 = 1;
+            } else if (chosen === 8) {
+                shift8 = 1;
+            } else if (chosen === 6) {
+                shift6 = 1;
+            }
+            leftover = leftover - chosen;
+            if (leftover > 0) {
+                remainderOut = leftover;
+                notes = "المتبقي لا يدخل ضمن النظام";
+            }
+        }
+
+        // بناء الأعمدة ديناميكيًا
+        let columns = [
+            { header: "عدد أيام الإجازة", value: days },
+            { header: "الساعات النظامية", value: systemHours },
+            { header: "إجمالي الساعات المطلوبة", value: totalHours }
+        ];
+
+        if (shift12 > 0) {
+            columns.push({ header: "مناوبات 12 ساعة", value: shift12 });
+        }
+        if (shift11 > 0) {
+            columns.push({ header: "مناوبات 11 ساعة", value: shift11 });
+        }
+        if (shift10 > 0) {
+            columns.push({ header: "مناوبات 10 ساعات", value: shift10 });
+        }
+        if (shift8 > 0) {
+            columns.push({ header: "مناوبات 8 ساعات", value: shift8 });
+        }
+        if (shift6 > 0) {
+            columns.push({ header: "مناوبات 6 ساعات", value: shift6 });
+        }
+
+        // عمود "الساعات المتبقية" دائماً ظاهر
+        columns.push({ header: "الساعات المتبقية", value: remainderOut > 0 ? remainderOut.toFixed(2) : "0" });
+
+        // عمود الملاحظات إن وجد
+        if (notes) {
+            columns.push({ header: "ملاحظات", value: notes });
+        }
+
+        // بناء ترويسة الجدول
+        let tableHead = "<tr>";
+        columns.forEach(col => {
+            tableHead += `<th>${col.header}</th>`;
+        });
+        tableHead += "</tr>";
+
+        // بناء الصف الوحيد بالبيانات
+        let tableRow = "<tr class='highlight'>";
+        columns.forEach(col => {
+            tableRow += `<td>${col.value}</td>`;
+        });
+        tableRow += "</tr>";
+
+        // بناء الجدول
+        let tableHTML = `
+            <table>
+                <thead>
+                    ${tableHead}
+                </thead>
+                <tbody>
+                    ${tableRow}
+                </tbody>
+            </table>
+        `;
+
+        const resultTable = document.getElementById('resultTable');
+        resultTable.style.display = "block";
+        resultTable.innerHTML = tableHTML;
     }
 </script>
-
 </body>
 </html>
