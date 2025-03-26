@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة الأيام المطلوبة</title>
+    <title>حاسبة المناوبات المطلوبة</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,7 +15,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden; /* لمنع التمرير */
+            overflow: hidden;
         }
         .container {
             max-width: 300px;
@@ -32,16 +32,16 @@
         }
         input[type="number"], select {
             width: 100%;
-            padding: 6px; /* تقليل حجم البادينغ */
+            padding: 6px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
             text-align: center;
-            font-size: 14px; /* تقليل حجم الخط */
+            font-size: 14px;
         }
         button {
-            width: 60%; /* تقليل عرض الزر */
-            padding: 8px; /* تقليل حجم البادينغ */
+            width: 60%;
+            padding: 8px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -60,48 +60,71 @@
             margin-top: 20px;
             text-align: center;
             font-size: 0.9em;
-            color: rgba(119, 119, 119, 0.6); /* لون شفاف قليلاً */
+            color: rgba(119, 119, 119, 0.6);
+        }
+        /* أيقونات تفاعلية */
+        .icon {
+            font-size: 2em;
+            margin: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .icon:hover {
+            transform: scale(1.2);
         }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <h2>حاسبة الأيام المطلوبة</h2>
+    <h2>حاسبة المناوبات المطلوبة</h2>
     <label for="days">عدد أيام الإجازة:</label>
     <input type="number" id="days" min="0" placeholder="أدخل عدد أيام الإجازة">
-
     <label for="hours">عدد الساعات:</label>
     <select id="hours">
         <option value="192">192</option>
     </select>
-
     <button onclick="calculate()">حساب</button>
-
     <div class="result" id="result"></div>
+    <div class="icon" onclick="alert('تفاعل أيقوني: تم الضغط على الأيقونة')">⭐</div>
 </div>
-
 <div class="footer">
     Coded & Developed: Ali Alshahrani
 </div>
-
 <script>
     function calculate() {
-        const days = document.getElementById('days').value;
-        const hours = document.getElementById('hours').value;
-
-        if (days === "") {
+        const daysInput = document.getElementById('days').value;
+        const hoursInput = document.getElementById('hours').value;
+        if (daysInput === "") {
             alert("يرجى إدخال عدد أيام الإجازة");
             return;
         }
-
-        const ar12 = parseFloat(days);
-        const av12 = parseFloat(hours);
-        const result = Math.abs((8 * ar12) - av12) / 12;
-
-        document.getElementById('result').innerText = ` الايام الاعتيادية المطلوبة : ${result.toFixed(2)}`;
+        const days = parseFloat(daysInput);
+        const totalHoursVacation = 8 * days;
+        const systemHours = parseFloat(hoursInput);
+        let remainingHours = systemHours - totalHoursVacation;
+        if (remainingHours < 0) {
+            alert("عدد أيام الإجازة المدخل يتجاوز النظام");
+            return;
+        }
+        const full12Shifts = Math.floor(remainingHours / 12);
+        const rem = remainingHours - (full12Shifts * 12);
+        let resultText = "";
+        if (rem === 0) {
+            resultText = `المطلوب منه: مناوبات 12 ساعة: ${full12Shifts}`;
+        } else if (rem < 6) {
+            resultText = `المطلوب منه: مناوبات 12 ساعة: ${full12Shifts}، ويوجد متبقي ${rem.toFixed(2)} ساعة ولا يوجد مناوبة بنظام ${rem.toFixed(2)} ساعة`;
+        } else {
+            const allowedShifts = [11, 10, 8, 6];
+            const candidates = allowedShifts.filter(shift => shift <= rem);
+            if (candidates.length > 0) {
+                const additionalShift = Math.max(...candidates);
+                resultText = `المطلوب منه: مناوبات 12 ساعة: ${full12Shifts}، ومناوبة ${additionalShift} ساعة`;
+            } else {
+                resultText = `المطلوب منه: مناوبات 12 ساعة: ${full12Shifts}، ويوجد متبقي ${rem.toFixed(2)} ساعة ولا يوجد مناوبة بنظام ${rem.toFixed(2)} ساعة`;
+            }
+        }
+        document.getElementById('result').innerText = resultText;
     }
 </script>
-
 </body>
 </html>
